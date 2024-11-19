@@ -1,0 +1,40 @@
+const pianoKeys = document.querySelectorAll(".piano-keys .key");
+const volumeSlider = document.querySelector(".volume-slider input");
+const keysCheck = document.querySelector(".keys-check input");
+let mapedKeys = [];
+let audio = new Audio(`./src/tunes/a.wav`);
+
+async function playSound(sound) {
+  audio.src = `./src/tunes/${sound}.wav`;
+  audio.play();
+  const clickedKey = document.querySelector(`[data-key="${sound}"]`);
+  clickedKey.classList.add("active");
+  setTimeout(() => {
+    clickedKey.classList.remove("active");
+  }, 150);
+}
+
+pianoKeys.forEach((key) => {
+  key.addEventListener("click", () => {
+    playSound(key.dataset.key);
+  });
+  mapedKeys.push(key.dataset.key);
+});
+
+document.addEventListener("keydown", (event) => {
+  if (mapedKeys.includes(event.key)) {
+    playSound(event.key);
+  }
+});
+
+const handleVolume = (event) => {
+  console.log(event.target.value);
+  audio.volume = event.target.value;
+};
+
+const showHideKeys = () => {
+  pianoKeys.forEach((key) => key.classList.toggle("hide"));
+};
+
+volumeSlider.addEventListener("input", handleVolume);
+keysCheck.addEventListener("click", showHideKeys);
